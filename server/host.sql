@@ -1,0 +1,9 @@
+USE madder_db;
+
+CREATE TABLE host(
+    groupId BIGINT NOT NULL PRIMARY KEY,
+    id BIGINT NOT NULL,
+    name VARCHAR(20),
+    state VARCHAR(255),
+    FOREIGN KEY(id) REFERENCES user (id) ON UPDATE CASCADE
+)
