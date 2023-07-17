@@ -781,6 +781,18 @@ app.get("/api", (req, res) => {
 });
 
 const port = 80;
+app.get("/chatroom", (req, res) => {
+  try {
+    res.json({data: "lala"});
+  
+  } 
+  catch (err){
+    console.log("error:", err);
+    return;
+  }
+})
+
+const port = 3000;
 http.listen(port, () => {
 	console.log(`Server is listening on port ${port}`);
 });
