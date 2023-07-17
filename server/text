@@ -1,0 +1,1 @@
+select H.name as title, GH.hobby as tag, H.state as summary, U.name as host, H.groupId as id from host as H, grouphobby as GH, user as U, groupinfo as GI where H.id = U.id
