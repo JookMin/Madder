@@ -2,47 +2,44 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import styles from "./Home.module.css";
 import Chatroom from "../components/Chatroom";
-import styled from "styled-components";
+import styled, {keyframes, css} from "styled-components";
+import { Link } from "react-router-dom";
 
-const availableTags = ["음악", "게임"];
+const availableTags = ["음악", "게임", "악기"];
+
+const slideInAnimation = keyframes`
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+`;
+
+const slideOutAnimation = keyframes`
+from {
+  transform: translateX(0);
+}
+to {
+  transform: translateX(100%);
+}
+`
 
 const Main = () => {
   const [loading, setLoading] = useState(true);
   const [chatrooms, setChatrooms] = useState([]);
   const [tags, setTags] = useState([]);
   const [selectedChatroom, setSelectedChatroom] = useState(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const getChatrooms = async () => {
     try {
-      const response = await axios.get("http://172.10.5.102:443/main/", { params: { tags } });
+      const response = await axios.get("http://172.10.5.102:80/main/", { params: { tags } });
       setChatrooms(response.data);
       setLoading(false);
     } catch (error) {
       console.log(error);
     }
-  };
-
-  useEffect(() => {
-    console.log("profile 상태 업데이트: ", profile);
-  }, [profile]);
-
-  const getProfile = async (userId) => {
-    try {
-      const response = await axios.get(`http://172.10.5.102:443/profile/`, { params: { id: userId } });
-      setproFile(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleEditClick = () =>{
-
-  };
-
-  const handleMenuClick = () => {
-    setSelectedMenu(true);
-    getProfile(2914444016);
-    setIsSidebarOpen(true);
   };
 
   const handleTagClick = (tag) => {
@@ -56,6 +53,11 @@ const Main = () => {
   const handleChatroomClick = (chatroomId) => {
     const selected = chatrooms.find((chatroom) => chatroom.id === chatroomId);
     setSelectedChatroom(selected);
+    setIsSidebarOpen(true);
+  };
+
+  const handleSidebarToggle = () => {
+    setIsSidebarOpen(prev => !prev);
   };
 
   useEffect(() => {
@@ -102,12 +104,21 @@ const Main = () => {
         </div>
       )}
       {selectedChatroom && (
-        <Sidebar>
-          <h2>{selectedChatroom.title}</h2>
-          <h3>{selectedChatroom.tag}</h3>
-          <p>{selectedChatroom.summary}</p>
-          {/* 추가적인 Chatroom 상세 정보를 표시할 수 있습니다 */}
-        </Sidebar>
+        <>
+          <Sidebar isSidebarOpen={isSidebarOpen}>
+            <h2>{selectedChatroom.title}</h2>
+            <h3>{selectedChatroom.tag}</h3>
+            <p>{selectedChatroom.summary}</p>
+            {/* 추가적인 Chatroom 상세 정보를 표시할 수 있습니다 */}
+            <Link to={`/chatroom/${selectedChatroom.id}`}>
+              이 채팅방으로 이동하기
+            </Link>
+            <SidebarToggleButton onClick={handleSidebarToggle}>
+            {isSidebarOpen ? "Sidebar 닫기" : "Sidebar 열기"}
+            </SidebarToggleButton>
+          </Sidebar>
+          
+        </>
       )}
     </div>
   );
@@ -132,39 +143,7 @@ const TagButton = styled.button`
   }
 `;
 
-const MenuButton = styled.button`
-  z-index: 2;
-  background-image: url('/img/settings.png');
-  background-size: 25px 25px;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-color: #FFFFFF;
-  width: 40px;
-  height: 40px;
-  padding: 0;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-`;
-
-const MadderTitle = styled.div`
-  z-index: 1;
-  width: 100%;
-  height: 80px;
-  top: 0;
-  left: 0;
-  position: fixed;
-  background-color: #f7dad8;
-  color: #FFFFFF;
-  font-size: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: row;
-`;
-
 const Sidebar = styled.div`
-  z-index: 3;
   position: fixed;
   right: 0;
   top: 0;
@@ -173,6 +152,38 @@ const Sidebar = styled.div`
   background-color: #f5f5f5;
   padding: 20px;
   overflow-y: auto;
+  transition: transform 0.3s ease;
+
+  /* isSidebarOpen 상태에 따라 애니메이션 적용 */
+  ${props =>
+    props.isSidebarOpen &&
+    css`
+      animation: ${slideInAnimation} 0.3s ease;
+    `}
+  
+  ${props =>
+    !props.isSidebarOpen &&
+    css`
+      animation: ${slideOutAnimation} 0.3s ease;
+      transform: translateX(100%);
+    `}
+`;
+
+const SidebarToggleButton = styled.button`
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  background-color: #2c2c2c;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #1e1e1e;
+  }
 `;
 
 

@@ -4,18 +4,20 @@ import axios from "axios";
 import styled from "styled-components";
 import PropTypes from 'prop-types';
 
-function Chatroom({ id, title, host, summary, tag, onClick }) {
+function DetailedView({ title, host, summary, tag }) {
   return (
-    <StyledChatroom onClick={() => onClick(id)}>
+    <StyledChatroom>
       {/* <img src={coverImg} alt={title} className={styles.movie__img} /> */}
       <div>
         <StyledTitle>
-          {title}
+          <Link to={`/chatroom/${id}`}>{title}</Link>
         </StyledTitle>
         <StyledHost>{host}</StyledHost>
         <p>{summary.length > 235 ? `${summary.slice(0, 235)}...` : summary}</p>
         <StyledTags>
-          {tag}
+          {tags.map((g) => (
+            <li key={g}>{g}</li>
+          ))}
         </StyledTags>
       </div>
     </StyledChatroom>
@@ -32,7 +34,6 @@ Chatroom.propTypes = {
 
 const StyledChatroom = styled.div`
 background-color: white;
-height : 150px;
 margin-bottom: 70px;
 font-weight: 300;
 padding: 20px;
@@ -45,12 +46,6 @@ text-decoration: none;
 color: inherit;
 box-shadow: 0 13px 27px -5px rgba(50, 50, 93, 0.25),
   0 8px 16px -8px rgba(0, 0, 0, 0.3), 0 -6px 16px -6px rgba(0, 0, 0, 0.025);
-  cursor: pointer;
-
-  &:hover {
-    box-shadow: 0 13px 27px -5px rgba(50, 50, 93, 0.25),
-    0 8px 16px -8px rgba(0, 0, 0, 0.3), 0 -6px 16px -6px rgba(0, 0, 0, 0.025), 0 0 0 4px #ff0000;
-  }
 `;
 
 const StyledTitle = styled.h2`
@@ -71,4 +66,6 @@ margin: 5px 0px;`;
 
 
 
-export default Chatroom;
+export default DetailedView;
+
+

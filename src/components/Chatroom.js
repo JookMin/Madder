@@ -32,7 +32,6 @@ Chatroom.propTypes = {
 
 const StyledChatroom = styled.div`
 background-color: white;
-height : 150px;
 margin-bottom: 70px;
 font-weight: 300;
 padding: 20px;
@@ -72,3 +71,5 @@ margin: 5px 0px;`;
 
 
 export default Chatroom;
+
+
