@@ -1,0 +1,8 @@
+USE madder_db;
+
+CREATE TABLE groupinfo (
+    groupId BIGINT NOT NULL,
+    id BIGINT NOT NULL,
+    FOREIGN KEY(id) REFERENCES user (id) ON UPDATE CASCADE,
+    FOREIGN KEY(groupId) REFERENCES host (groupId) ON UPDATE CASCADE
+)
