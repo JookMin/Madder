@@ -34,7 +34,7 @@ const Main = () => {
 
   const getChatrooms = async () => {
     try {
-      const response = await axios.get("http://172.10.5.102:80/main/", { params: { tags } });
+      const response = await axios.get("http://172.10.5.102:443/main/", { params: { tags } });
       setChatrooms(response.data);
       setLoading(false);
     } catch (error) {

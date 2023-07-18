@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import styled from "styled-components";
+import Messages from "../components/Messages";
 
 const Wrapper = styled.div`
   display: flex;
@@ -43,9 +44,9 @@ function Detail() {
         <p>{chatroom.summary}</p>
         {/* 추가적인 Chatroom 정보를 표시할 수 있습니다 */}
       </ChatroomDetail>
-      <ChatroomChat>
+      <Messages>
         {/* 채팅창을 구현할 컴포넌트 또는 코드를 작성하세요 */}
-      </ChatroomChat>
+      </Messages>
     </Wrapper>
   );
 }

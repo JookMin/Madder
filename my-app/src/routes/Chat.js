@@ -5,7 +5,7 @@ import axios from "axios";
 function Chat() {
   const { id } = useParams();
   const getChat = async () => {
-    axios.get("http://172.10.5.102:80/chatroom/", {params : {id : 12}})
+    axios.get("http://172.10.5.102:443/chatroom/", {params : {id : 12}})
     .then(res => {
       console.log(res)
     })
