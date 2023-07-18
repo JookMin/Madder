@@ -15,8 +15,6 @@ function App() {
         </Route>
         <Route path="/chatroom" element={<Chat />}>
         </Route>
-        <Route path="/profile" element={<Profile />}>
-        </Route>
       </Routes>
     </Router>
   );

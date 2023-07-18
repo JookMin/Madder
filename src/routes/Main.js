@@ -2,17 +2,35 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import styles from "./Home.module.css";
 import Chatroom from "../components/Chatroom";
-import Memu from "../components/Menu";
-import styled from "styled-components";
+import styled, {keyframes, css} from "styled-components";
+import { Link } from "react-router-dom";
 
-const availableTags = ["음악", "게임"];
+const availableTags = ["음악", "게임", "악기"];
+
+const slideInAnimation = keyframes`
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+`;
+
+const slideOutAnimation = keyframes`
+from {
+  transform: translateX(0);
+}
+to {
+  transform: translateX(100%);
+}
+`
 
 const Main = () => {
   const [loading, setLoading] = useState(true);
   const [chatrooms, setChatrooms] = useState([]);
   const [tags, setTags] = useState([]);
   const [selectedChatroom, setSelectedChatroom] = useState(null);
-  const [menu, setMenu] = useState(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const getChatrooms = async () => {
     try {
@@ -35,16 +53,17 @@ const Main = () => {
   const handleChatroomClick = (chatroomId) => {
     const selected = chatrooms.find((chatroom) => chatroom.id === chatroomId);
     setSelectedChatroom(selected);
+    setIsSidebarOpen(true);
   };
 
-  const handleMenuClick = (menus) =>{
-    const selected = menu.
-  }
+  const handleSidebarToggle = () => {
+    setIsSidebarOpen(prev => !prev);
+  };
 
   useEffect(() => {
     getChatrooms();
     console.log(tags, selectedChatroom);
-  }, [tags]);
+  }, [tags, selectedChatroom]);
 
   return (
     <div className={styles.container}>
@@ -85,12 +104,21 @@ const Main = () => {
         </div>
       )}
       {selectedChatroom && (
-        <Sidebar>
-          <h2>{selectedChatroom.title}</h2>
-          <h3>{selectedChatroom.tag}</h3>
-          <p>{selectedChatroom.summary}</p>
-          {/* 추가적인 Chatroom 상세 정보를 표시할 수 있습니다 */}
-        </Sidebar>
+        <>
+          <Sidebar isSidebarOpen={isSidebarOpen}>
+            <h2>{selectedChatroom.title}</h2>
+            <h3>{selectedChatroom.tag}</h3>
+            <p>{selectedChatroom.summary}</p>
+            {/* 추가적인 Chatroom 상세 정보를 표시할 수 있습니다 */}
+            <Link to={`/chatroom/${selectedChatroom.id}`}>
+              이 채팅방으로 이동하기
+            </Link>
+            <SidebarToggleButton onClick={handleSidebarToggle}>
+            {isSidebarOpen ? "Sidebar 닫기" : "Sidebar 열기"}
+            </SidebarToggleButton>
+          </Sidebar>
+          
+        </>
       )}
     </div>
   );
@@ -119,11 +147,44 @@ const Sidebar = styled.div`
   position: fixed;
   right: 0;
   top: 0;
-  width: 300px;
+  width: 45%;
   height: 100%;
   background-color: #f5f5f5;
   padding: 20px;
   overflow-y: auto;
+  transition: transform 0.3s ease;
+
+  /* isSidebarOpen 상태에 따라 애니메이션 적용 */
+  ${props =>
+    props.isSidebarOpen &&
+    css`
+      animation: ${slideInAnimation} 0.3s ease;
+    `}
+  
+  ${props =>
+    !props.isSidebarOpen &&
+    css`
+      animation: ${slideOutAnimation} 0.3s ease;
+      transform: translateX(100%);
+    `}
 `;
+
+const SidebarToggleButton = styled.button`
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  background-color: #2c2c2c;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #1e1e1e;
+  }
+`;
+
 
 export default Main;
