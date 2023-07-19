@@ -6,6 +6,7 @@ import Main from './routes/Main'
 import Main2 from './routes/Main2'
 import Login from './routes/Login'
 import KaKao from './routes/KaKao'
+import Edit from './routes/Edit'
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/" element={<Main2 />} />
         <Route path="/Login" element={<Login />} />
         <Route path="/oauth" element={<KaKao />} />
+        <Route path="/edit" element={<Edit />} />
       </Routes>
     </Router>
   )
