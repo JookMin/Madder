@@ -13,7 +13,7 @@ const KaKao = props => {
   let code = new URL(window.location.href).searchParams.get('code')
   let grant_type = 'authorization_code'
   let client_id = 'dcb8c3b23d720c296085cbdc9046ece9'
-  const API_URL = 'http://172.10.5.102:443'
+  const API_URL = 'http://172.10.5.102:80'
 
   //인가 코드 전달
   useEffect(() => {
@@ -28,14 +28,16 @@ const KaKao = props => {
         //const data = await response.json()
         const token = response.data.token
         const isNewUser = response.data.isNewUser
+        const id = response.data.userId
         console.log('token:', token)
         console.log(isNewUser)
         //토큰을 로컬 스토리지에 저장
         localStorage.setItem('user_token', token)
+        localStorage.setItem('user_id', id)
         if (isNewUser) {
           navigate('/Login')
         } else {
-          navigate('/')
+          navigate('/Main')
         }
       } catch (error) {
         if (error.response) {

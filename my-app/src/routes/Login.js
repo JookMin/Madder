@@ -8,6 +8,7 @@ import Madcomponent from './Mapcomponent'
 import serialize from 'serialize-javascript'
 import ImageMap from 'image-map'
 import mapImage from '../assets/image/map1.gif'
+
 const Login = () => {
   let options = {
     anchors: ['sectionOne', 'sectionTwo', 'sectionThree', 'sectionFour'],
@@ -37,7 +38,7 @@ const Login = () => {
 
   const Rest_api_key = 'dcb8c3b23d720c296085cbdc9046ece9'
   const redirect_uri = 'http://localhost:3000/oauth'
-  const API_URL = 'http://172.10.5.102:443'
+  const API_URL = 'http://172.10.5.102:80'
   const kakaoURL = `http://kauth.kakao.com/oauth/authorize?client_id=${Rest_api_key}&redirect_uri=${redirect_uri}&response_type=code`
   function serialize(obj) {
     const simpleObject = {

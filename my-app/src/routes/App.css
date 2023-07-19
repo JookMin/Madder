@@ -6,20 +6,20 @@
   border-color: black;
 }
 .mainBox {
-  width: 100%;
+  width: 100vw;
   height: 100vh;
   margin: 0px auto;
 }
 .mainVideo {
   z-index: -1;
   width: 100%;
-  height: 150%;
+  height: 100%;
   object-fit: cover;
   opacity: 80%;
 }
 .mainVideo-text {
   position: absolute;
-  top: 50%;
+  top: 10%;
   width: 100%;
 }
 .mainVideo-bold {
@@ -161,4 +161,94 @@ input:valid ~ label {
   font-size: 16px;
   padding: 0 2px;
   background: #060b23;
+}
+.image1 {
+  position: relative;
+  height: 100vh;
+}
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  height: 100vh;
+  width: 100%;
+}
+.content span .img-txt {
+  background-color: #333;
+  text-transform: uppercase;
+  color: #fff;
+  padding: 1rem;
+  font-size: 1.5rem;
+  letter-spacing: 10px;
+}
+.Main2 {
+  width: 100%;
+  height: 100%;
+  background-image: url('../assets/image/mainBack.jpg');
+}
+.Main2Box {
+  background-color: rgba(255, 255, 255, 0.3);
+
+  margin-top: 8%;
+  width: 100%;
+  height: 60%;
+  position: absolute;
+
+  display: inline-flex;
+  border-radius: 10px;
+  border: 1px solid white;
+  box-shadow: 1px 1px 1px white;
+  padding: 30px;
+  overflow: hidden;
+  position: relative;
+
+  animation: 3s infinite alternate slidein;
+}
+
+.Main2BoxRight {
+  position: absolute;
+  width: 70%;
+}
+.Main2BoxLeft {
+  position: absolute;
+  width: 30%;
+  margin-top: -10%;
+}
+
+.Main3 {
+  width: 100%;
+  height: 100%;
+  background-image: url('../assets/image/Main5.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.75;
+}
+.Main3Box {
+  background-color: rgba(255, 255, 255, 0.3);
+  margin-bottom: 3%;
+  margin-top: 3%;
+  width: 60%;
+  height: 80%;
+  position: absolute;
+  left: 18%;
+  display: inline-flex;
+  border-radius: 10px;
+  border: 1px solid white;
+  box-shadow: 1px 1px 1px white;
+  padding: 30px;
+  overflow: hidden;
+  position: relative;
+
+  animation: 3s infinite alternate slidein;
+}
+
+.Main3BoxRight {
+  position: absolute;
+  width: 55%;
+}
+.Main3BoxLeft {
+  position: absolute;
+  width: 45%;
 }

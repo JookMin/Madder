@@ -4,6 +4,7 @@ import styles from './Home.module.css'
 import Chatroom from '../components/Chatroom'
 import styled, { keyframes, css } from 'styled-components'
 import { Link } from 'react-router-dom'
+import Animation2 from './Animation2'
 
 const availableTags = ['음악', '게임', '악기']
 
@@ -37,10 +38,11 @@ const Main = () => {
   const [summary, setSummary] = useState('')
   const [tag, setTag] = useState('')
   const [host, setHost] = useState('')
+  const [active, setActive] = useState([])
 
   const getChatrooms = async () => {
     try {
-      const response = await axios.get('http://172.10.5.102:443/main/', {
+      const response = await axios.get('http://172.10.5.102:80/main/', {
         params: { tags },
       })
       setChatrooms(response.data)
@@ -75,13 +77,16 @@ const Main = () => {
 
   const handleSubmit = async () => {
     try {
+      const id = localStorage.getItem('user_id')
       const response = await axios.post(
-        'http://172.10.5.102:443/chatroom/save',
+        'http://172.10.5.102:80/chatroom/save',
         {
+          id,
           title,
           summary,
           tag,
-          host,
+
+          active,
         }
       )
 
@@ -105,7 +110,6 @@ const Main = () => {
     }
   }, [tags, selectedChatroom])
 
-  const addGroup = () => {}
   return (
     <div className={styles.container}>
       <div className={styles.tags}>
@@ -188,6 +192,13 @@ const Main = () => {
               value={host}
               onChange={e => setHost(e.target.value)}
             />
+            <Input
+              type="text"
+              placeholder="활동반경 (,로 구분해서 작성해주세요)"
+              value={active}
+              onChange={e => setActive(e.target.value.split(','))}
+            />
+            <button onClick={handleSubmit}>만들기</button>
             <SidebarToggleButton onClick={handleSidebarToggle}>
               {isSidebarOpen ? 'Sidebar 닫기' : 'Sidebar 열기'}
             </SidebarToggleButton>

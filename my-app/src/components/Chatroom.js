@@ -4,7 +4,7 @@ import axios from "axios";
 import styled from "styled-components";
 import PropTypes from 'prop-types';
 
-function Chatroom({ id, title, host, summary, tag, onClick }) {
+function Chatroom({ id, title, host, summary, tag, onClick,active }) {
   return (
     <StyledChatroom onClick={() => onClick(id)}>
       {/* <img src={coverImg} alt={title} className={styles.movie__img} /> */}
@@ -16,6 +16,9 @@ function Chatroom({ id, title, host, summary, tag, onClick }) {
         <p>{summary.length > 235 ? `${summary.slice(0, 235)}...` : summary}</p>
         <StyledTags>
           {tag}
+        </StyledTags>
+        <StyledTags>
+          {active}
         </StyledTags>
       </div>
     </StyledChatroom>
