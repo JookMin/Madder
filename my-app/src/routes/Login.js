@@ -14,13 +14,7 @@ const Login = () => {
     anchors: ['sectionOne', 'sectionTwo', 'sectionThree', 'sectionFour'],
   }
   const navigate = useNavigate()
-  const [areaColor, setAreaColors] = useState({
-    Junggu: '',
-    Donggu: '',
-    Seogu: '',
-    Daedeokgu: '',
-    Yuseonggu: '',
-  })
+
   const [message, setMessage] = useState('')
   const [nickname, setNickName] = useState('')
   const [map, setMap] = useState([])
@@ -105,6 +99,7 @@ const Login = () => {
   const clickHandler5 = () => {
     if (!map.includes('Yuseonggu')) {
       setMap([...map, 'Yuseonggu'])
+
       alert('유성구')
     } else {
       setMap(map.filter(item => item !== 'Yuseonggu'))
@@ -160,16 +155,16 @@ const Login = () => {
             </div>
             <div className="logBoxRight">
               <p className="loginTitle">Welcome!</p>
-              <div className="input-field">
+              <div className="inputDiv">
                 <input
+                  placeholder="Enter a NickName"
+                  className="input"
                   type="text"
                   onChange={e => {
                     setNickName(e.target.value)
                   }}
                 />
-                <label>Enter nickname</label>
               </div>
-              <div>{message}</div>
             </div>
           </div>
         </div>
@@ -187,7 +182,7 @@ const Login = () => {
                 {tags.map((tag, index) => (
                   <div className="tag-item">
                     {/* One hardcoded tag for test */}
-                    <button className="text" onClick={() => handle(tag)}>
+                    <button className="btn" onClick={() => handle(tag)}>
                       {tag}
                     </button>
                   </div>
@@ -239,7 +234,6 @@ const Login = () => {
                   shape="poly"
                 />
               </map>
-              <button onClick={postInfo}>Complete</button>
             </div>
           </div>
         </div>
@@ -252,14 +246,18 @@ const Login = () => {
             </div>
             <div className="logBoxRight">
               <p className="loginTitle">Welcome!</p>
-              <div className="tags-input-container">
+              <div className="inputDiv">
                 <input
+                  placeholder="Enter a State"
                   type="text"
                   className="input"
                   onChange={e => {
                     setState(e.target.value)
                   }}
                 />
+                <button className="btn" onClick={postInfo}>
+                  Complete
+                </button>
               </div>
             </div>
           </div>

@@ -5,11 +5,18 @@ import Chatroom from '../components/Chatroom'
 import styled, { keyframes, css } from 'styled-components'
 import { Link } from 'react-router-dom'
 import React from 'react'
+import Animation3 from './Animation3'
+import ExampleCard from '../components/ExampleCard'
+import './App.css'
+
+const availableRegions = ['Seogu', 'Daedeokgu', 'Junggu', 'Donggu', 'Yuseonggu']
+const availableTags = ['노래', '게임', '미디어', '스포츠', '패션', '요리', '펫']
 
 const TotalContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 80px;
+  font-family: 'font';
 `
 
 const Container = styled.div`
@@ -56,8 +63,6 @@ const ChatroomsContainer = styled.div`
   gap: 16px;
 `
 
-const availableTags = ['음악', '게임', '악기']
-
 const slideInAnimation = keyframes`
   from {
     transform: translateX(100%);
@@ -77,11 +82,13 @@ to {
 `
 
 export default function Main() {
-  // const id = localStorage.getItem('user_id');
+  const id = localStorage.getItem('user_id')
   const [loading, setLoading] = useState(true)
   const [chatrooms, setChatrooms] = useState([])
   const [select, setSelect] = useState([])
-  const [tags, setTags] = useState([
+  const [tags, setTags] = useState(availableTags)
+  const [regions, setRegions] = useState(availableRegions)
+  const [tagg, setTagg] = useState([
     '노래',
     '미디어',
     '스포츠',
@@ -90,12 +97,11 @@ export default function Main() {
     '요리',
     '펫',
   ])
-  const [selectedChatroom, setSelectedChatroom] = useState(false)
+  const [selectedChatroom, setSelectedChatroom] = useState(null)
   const [selectedMenu, setSelectedMenu] = useState(false)
   const [newChatroom, setNewChatroom] = useState(false)
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
   const [profile, setproFile] = useState(null)
-
   const [title, setTitle] = useState('')
   const [summary, setSummary] = useState('')
   const [tag, setTag] = useState('')
@@ -105,7 +111,7 @@ export default function Main() {
   const getChatrooms = async () => {
     try {
       const response = await axios.get('http://172.10.5.102:80/main/', {
-        params: { tags },
+        params: { tags, regions },
       })
       setChatrooms(response.data)
       setLoading(false)
@@ -131,7 +137,9 @@ export default function Main() {
 
   const handleMenuClick = () => {
     setSelectedMenu(true)
-    getProfile(2914444016)
+    setSelectedChatroom(null)
+    setNewChatroom(false)
+    getProfile(id)
     setIsSidebarOpen(true)
   }
 
@@ -147,8 +155,18 @@ export default function Main() {
     const selected = chatrooms.find(chatroom => chatroom.id === chatroomId)
     setSelectedChatroom(selected)
     setSelectedMenu(false) // Add this line to hide the menu sidebar content when a chatroom is clicked.
+    setNewChatroom(false)
     setIsSidebarOpen(true)
   }
+
+  const handleRegionClick = region => {
+    if (regions.includes(region)) {
+      setRegions(regions.filter(selectedRegion => selectedRegion !== region))
+    } else {
+      setRegions([...regions, region])
+    }
+  }
+
   const handleSubmit = async () => {
     try {
       const id = localStorage.getItem('user_id')
@@ -158,33 +176,36 @@ export default function Main() {
           id,
           title,
           summary,
-          tag,
-
+          select,
           active,
         }
       )
-
-      if (response.status === 200) {
+      {
         setTitle('')
         setSummary('')
-        setTag('')
+        setSelect([])
         setHost('')
-
         getChatrooms()
       }
     } catch (error) {
       console.log(error)
     }
   }
+
   const addChatroomClick = () => {
     setNewChatroom(true)
+    setSelectedMenu(false)
+    setSelectedChatroom(false)
     setIsSidebarOpen(true)
   }
+
   const handle = tag => {
     if (!select.includes(tag)) {
       setSelect(prevSelect => [...prevSelect, tag])
+      console.log(select)
     } else {
       setSelect(select.filter(select => select !== tag))
+      console.log(select)
     }
   }
   const handleSidebarToggle = () => {
@@ -204,14 +225,16 @@ export default function Main() {
         Madder
         <MenuButtonContainer>
           <MenuButton onClick={() => handleMenuClick()}></MenuButton>
+
+          <MenuButton2 onClick={addChatroomClick}></MenuButton2>
         </MenuButtonContainer>
       </MadderTitle>
       <div className={styles.container}>
         <Container>
           <TagsContainer>
             <TagButton
-              className={tags.length === 0 ? 'active' : ''}
-              onClick={() => setTags([])}
+              className={tags.length === availableTags.length ? 'active' : ''}
+              onClick={() => setTags(availableTags)}
             >
               All
             </TagButton>
@@ -226,6 +249,26 @@ export default function Main() {
             ))}
           </TagsContainer>
           <Divider />
+          <div className={styles.tags}>
+            <TagButton
+              className={
+                regions.length === availableRegions.length ? 'active' : ''
+              }
+              onClick={() => setRegions(availableRegions)}
+            >
+              All
+            </TagButton>
+            {availableRegions.map(region => (
+              <TagButton
+                key={region}
+                className={regions.includes(region) ? 'active' : ''}
+                onClick={() => handleRegionClick(region)}
+              >
+                {region}
+              </TagButton>
+            ))}
+          </div>
+
           {loading ? (
             <div className={styles.loader}>
               <span>Loading...</span>
@@ -235,7 +278,7 @@ export default function Main() {
               <ChatroomsContainer>
                 <div className={styles.chatrooms}>
                   {chatrooms.map(chatroom => (
-                    <Chatroom
+                    <ExampleCard
                       key={chatroom.id}
                       id={chatroom.id}
                       title={chatroom.title}
@@ -245,7 +288,6 @@ export default function Main() {
                       onClick={() => handleChatroomClick(chatroom.id)}
                     />
                   ))}
-                  <button onClick={addChatroomClick}>그룹 추가</button>
                 </div>
               </ChatroomsContainer>
               {selectedChatroom && (
@@ -283,49 +325,45 @@ export default function Main() {
                 </>
               )}
               {newChatroom && (
-                <>
-                  <Sidebar isSidebarOpen={isSidebarOpen}>
-                    <Input
-                      type="text"
-                      placeholder="제목"
-                      value={title}
-                      onChange={e => setTitle(e.target.value)}
-                    />
-                    <Input
-                      type="text"
-                      placeholder="요약"
-                      value={summary}
-                      onChange={e => setSummary(e.target.value)}
-                    />
-                    <Input
-                      type="text"
-                      placeholder="태그"
-                      value={tag}
-                      onChange={e => setTag(e.target.value)}
-                    />
+                <Sidebar isSidebarOpen={isSidebarOpen}>
+                  <InputContainer>
+                    <EtcContainer>
+                      <Input
+                        type="text"
+                        placeholder="title"
+                        value={title}
+                        onChange={e => setTitle(e.target.value)}
+                      />
+                      <Input
+                        type="text"
+                        placeholder="summary"
+                        value={summary}
+                        onChange={e => setSummary(e.target.value)}
+                      />
 
-                    {/* <Input
-                      type="text"
-                      placeholder="활동반경 (,로 구분해서 작성해주세요)"
-                      value={active}
-                      onChange={e => setActive(e.target.value.split(','))}
-              /> */}
-                    <div className="tags-input-container">
-                      {tags.map((tag, index) => (
-                        <div className="tag-item">
-                          {/* One hardcoded tag for test */}
-                          <button className="text" onClick={() => handle(tag)}>
-                            {tag}
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                    <button onClick={handleSubmit}>만들기</button>
-                    <SidebarToggleButton onClick={handleSidebarToggle}>
-                      {isSidebarOpen ? 'Sidebar 닫기' : 'Sidebar 열기'}
-                    </SidebarToggleButton>
-                  </Sidebar>
-                </>
+                      <Input
+                        type="text"
+                        placeholder="활동반경 (,로 구분해서 작성해주세요)"
+                        value={active}
+                        onChange={e => setActive(e.target.value.split(','))}
+                      />
+                      <div className="tags-input-container">
+                        {tagg.map((tag, index) => (
+                          <div className="tag-item">
+                            {/* One hardcoded tag for test */}
+                            <button className="btn" onClick={() => handle(tag)}>
+                              {tag}
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                      <Groupadd onClick={handleSubmit}>만들기</Groupadd>
+                      <SidebarToggleButton onClick={handleSidebarToggle}>
+                        {isSidebarOpen ? 'Sidebar 닫기' : 'Sidebar 열기'}
+                      </SidebarToggleButton>
+                    </EtcContainer>
+                  </InputContainer>
+                </Sidebar>
               )}
             </>
           )}
@@ -334,8 +372,76 @@ export default function Main() {
     </TotalContainer>
   )
 }
+
+const Groupadd = styled.button`
+  padding: 10px 20px;
+  background-color: #2c2c2c;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  font-family: 'font';
+  &:hover {
+    background-color: #1e1e1e;
+  }
+`
+const MenuButton2 = styled.button`
+  z-index: 2;
+  margin-right: 80%;
+  background-image: url('img/more.png');
+  background-size: 25px 25px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: #ffffff;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+`
+
+const InputContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  overflow: hidden;
+`
+const AnimationContainer = styled.div`
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  overflow: hidden;
+`
+const EtcContainer = styled.div`
+  margin-top: 40%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+`
 const Input = styled.input`
   width: 100px;
+  font-size: 15px;
+  color: #222222;
+  width: 500px;
+  border: none;
+  border-bottom: solid #aaaaaa 1px;
+  padding-bottom: 10px;
+  /* margin-left: -50px; */ // 이 줄을 주석 처리하거나 삭제합니다.
+  margin-top:-20%
+  position: relative;
+  background: none;
+  z-index: 5;
+  font-weight: 600;
+  font-family: 'Merriweather', serif;
 `
 
 const TagButton = styled.button`
@@ -346,6 +452,7 @@ const TagButton = styled.button`
   border-radius: 4px;
   font-size: 16px;
   cursor: pointer;
+  font-family: 'font';
 
   &:hover {
     background-color: #1e1e1e;
@@ -359,13 +466,13 @@ const TagButton = styled.button`
 
 const MenuButton = styled.button`
   z-index: 2;
-  background-image: url('img/settings.png');
-  background-size: 25px 25px;
+  background-image: url('/img/menu.png');
+  background-size: 40px 40px;
   background-repeat: no-repeat;
   background-position: center;
-  background-color: #ffffff;
-  width: 40px;
-  height: 40px;
+  background-color: rgba(0, 0, 0, 0);
+  width: 50px;
+  height: 50px;
   padding: 0;
   border: none;
   border-radius: 6px;
@@ -379,9 +486,11 @@ const MadderTitle = styled.div`
   top: 0;
   left: 0;
   position: fixed;
+  font-family: 'font';
+  font-weight: bold;
   background-color: #f7dad8;
   color: #ffffff;
-  font-size: 50px;
+  font-size: 80px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -399,6 +508,7 @@ const Sidebar = styled.div`
   padding: 20px;
   overflow-y: auto;
   transition: transform 0.3s ease;
+  font-family: 'font';
 
   /* isSidebarOpen 상태에 따라 애니메이션 적용 */
   ${props =>
@@ -420,13 +530,13 @@ const EditButton = styled.button`
   position: fixed;
   top: 20px;
   right: 20px;
-  background-image: url('img/edit.png');
-  background-size: 25px 25px;
+  background-image: url('/img/edit.png');
+  background-size: 40px 40px;
   background-repeat: no-repeat;
   background-position: center;
   background-color: #ffffff;
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   padding: 0;
   border: none;
   border-radius: 6px;
@@ -444,7 +554,7 @@ const SidebarToggleButton = styled.button`
   border-radius: 4px;
   font-size: 16px;
   cursor: pointer;
-
+  font-family: 'font';
   &:hover {
     background-color: #1e1e1e;
   }

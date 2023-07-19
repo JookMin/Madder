@@ -15,7 +15,7 @@ const Animation3 = props => {
 
   return (
     <>
-      <div ref={container} style={{ width: '700px', height: '100vh' }} />
+      <div ref={container} style={{ width: '700px', height: '500px' }} />
     </>
   )
 }
