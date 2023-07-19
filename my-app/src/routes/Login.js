@@ -7,7 +7,7 @@ import TagsInput from './TagsInput'
 import Madcomponent from './Mapcomponent'
 import serialize from 'serialize-javascript'
 import ImageMap from 'image-map'
-import mapImage from '../assets/image/map1.gif'
+import mapImage from '../assets/image/map5.png'
 
 const Login = () => {
   let options = {
